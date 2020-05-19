@@ -57,12 +57,12 @@ router.post("/login", async (req,res) => {
       res.send(resBody)
     }
   }
-  
-  const emailDoc = await (await UserModel.findOne( {email: user.email} )).exec()
+
+  const emailDoc = await UserModel.findOne( {email: user.email} ).exec()
 
   if (emailDoc === null) {
 
-    resBody.loginStatus = "No user with this email"
+    resBody.errorMessage = "No user with this email"
     res.send(resBody)
 
   } else {

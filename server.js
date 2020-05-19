@@ -16,7 +16,7 @@ console.log("we're connected!")
 
 // Allow front end to access API
 const cors = require('cors');
-app.use(cors({origin: "http://localhost:3000"}));
+app.use(cors())
 
 
 // --------- ROUTES ---------
