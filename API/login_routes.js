@@ -8,57 +8,41 @@ router = express.Router()
 // 3. Check if password matches
 // 4. Send JWT to front end
 
-fetchUsername = async (username) => {
-  try {
-    return doc = await UserModel.findOne( {username: username} ).exec();
-  } catch(err) {
-    console.error(err);
-  }
-}
-
-fetchEmail = async (email) => {
-  try {
-    return doc = await UserModel.findOne( {email: email} ).exec();
-  } catch(err) {
-    console.error(err);
-  }
-}
 
 router.post("/login", async (req,res) => {
 
-  // default response
-  const resBody = {
-    cont: false,
-    errorMessage: "",
-    token: undefined
-  };
-
-  // extract login information from post req
   const user = {
     username: req.body.username_email,
     email: req.body.username_email,
     password: req.body.password
   }
 
-  const usernameDoc = await UserModel.findOne( {username: user.username} ).exec()
+  const resBody = {
+    cont: false,
+    errorMessage: "",
+    token: undefined
+  };
+
+  const usernameDoc = await UserModel.findOne( {username: user.username} )
 
   if( usernameDoc === null) {
 
     resBody.errorMessage = "No user with this username"
-    res.send(resBody)
-
-  } else {
+    return res.send(resBody)
+  }
+  
+  if (usernameDoc !== null){
     if (user.password === usernameDoc.password) {
 
-      res.send({cont: true, token: usernameDoc.token, username: usernameDoc.username})
+      return res.send({cont: true, token: usernameDoc.token, username: usernameDoc.username})
 
     } else {
       resBody.errorMessage = "Incorrect password"
-      res.send(resBody)
+      return res.send(resBody)
     }
   }
 
-  const emailDoc = await UserModel.findOne( {email: user.email} ).exec()
+  const emailDoc = await UserModel.findOne( {email: user.email} )
 
   if (emailDoc === null) {
 

@@ -6,21 +6,22 @@ const UserModel = require('../dbModels/userModel');
 
 
 router.get("/auth", authenticateJWT, async (req,res) => {
-  console.log('Token authorized')
-  res.send({canEditProfile: true})
+  res.send({authenticated: true})
 })
 
-router.get("/canEdit/:username", async (req,res) => {
+router.get("/canEdit/:username", async (req,res) => { console.log('request to /canEdit')
 
-    // extract token
     const authHeader = req.get('Authorization').split(' ')
     const token = authHeader[1]
     const tokenUsername = jwt.decode(token)
 
-    //get profile data from db
-    const doc = await UserModel.findOne( {username: tokenUsername} ).exec();
+    console.log('tokenUsername: ', tokenUsername)
+    console.log('reqparamsusername: ',req.params.username)
 
-    if(doc === null) res.send({canEditProfile: false, errorMessage: 'token does not exist'})
+    //get profile data from db
+    const doc = await UserModel.findOne( {username: req.params.username} ).exec();
+
+    if(doc === null) return res.send({canEditProfile: false, errorMessage: 'token does not exist'})
 
     if(token === doc.token) {
       res.send({canEditProfile: true})

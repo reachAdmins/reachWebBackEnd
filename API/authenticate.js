@@ -5,13 +5,14 @@ const UserModel = require('../dbModels/userModel');
 
 const authenticate = async (req,res,next) => {
 
-    console.log("Authentication request")
+    console.log("Request to /auth")
 
-    authHeader = authHeader.get('Authorization').split(' ')
+    const authHeader = req.get('Authorization').split(' ')
     const token = authHeader[1]
 
     try { 
         const username = jwt.decode(token) 
+        console.log(username)
         const doc = await UserModel.findOne( {username: username} ).exec();
     
         if( doc === null ) {

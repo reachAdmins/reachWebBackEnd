@@ -6,43 +6,45 @@ const authenticate = require('./authenticate.js')
 
 router = express.Router()
 
-router.post("/editUserData", async (req,res) => {
+router.post("/editUser", async (req,res) => { console.log("Request to /editUser")
 
-    // define resBody
     const resBody = {
         cont: false,
-        errorMessage: ''
+        errorMessage: '',
+        token: ""
     }
 
-    // extract and decode JWT
     reqJWT = req.get('Authorization')
     const bearer = reqJWT.split(' ')
     const token = bearer[1]
-    const username = jwt.decode(token)
+    const tokenUsername = jwt.decode(token)
 
-    // extract reqBody
     const insertUser = {
         username: req.body.username,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        token: jwt.sign(req.body.username,'abcd'),
     }
 
-    console.log('editUser reqData: ',insertUser)
+    //validate new fields
 
-    // get user docID
-    const updateDoc = await UserModel.findOne({username: username})
+    const updateDoc = await UserModel.findOne( {username: tokenUsername} )
 
-    // edit user info
     updateDoc.username = insertUser.username
     updateDoc.email = insertUser.email
     updateDoc.password = insertUser.password
-    updateDoc.save().then(() => {
+    updateDoc.token = insertUser.token
+
+    await updateDoc.save()
+    if(updateDoc === null) {
+        resBody.errorMessage = "Could not update user information"
+        return res.send(resBody)
+    } else {
         resBody.cont = true
+        resBody.token = insertUser.token
+    
         res.send(resBody)
-    })
-    .catch(() => {
-        res.send(resBody)
-    })
+    }    
 })
 
 module.exports = router;
