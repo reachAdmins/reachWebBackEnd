@@ -6,13 +6,11 @@ app.use(express.json()); // Body parsing middleware
 
 // Database
 const mongoose = require('mongoose');
-const url = "mongodb://localhost:27017/reachDB";
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+const dbURL = "mmongodb+srv://stavrones:Stavpizza!23@cluster0-jiwwd.mongodb.net/Reach?retryWrites=true&w=majority";
+mongoose.connect(dbURL, {useNewUrlParser: true, useUnifiedTopology: true});
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-console.log("we're connected!")
-});
+db.once('open', function() { console.log("DB Connection successfull") });
 
 // Allow front end to access API
 const cors = require('cors');
@@ -21,20 +19,29 @@ app.use(cors())
 
 // --------- ROUTES ---------
 
-// create new user
-app.use(require('./API/signup_routes.js'));
+// SIGNUP
+// Create new user doc => { token: String }
+app.use(require('./API/signup.js'));
 
-// validate username, pwd and send token
-app.use(require('./API/login_routes.js'));
+// LOGIN
+// validate (username, pwd) => { token: String }
+app.use(require('./API/login.js'));
 
-// Validate token / canEdit profile
-app.use(require('./API/auth_routes.js'));
+// AUTHORIZE TOKEN
+// validate token => { Auth: Bool } 
+app.use(require('./API/auth.js'));
 
-// Send user profile information
-app.use(require('./API/profile_routes.js'));
+// SEND USER PROFILE
+// get user and userPost doc => { userData: {data}, userPosts: { {postID: Data},{postID: Data}... } }
+app.use(require('./API/userProfile.js'));
 
-// User edit self
-app.use(require('./API/edit_user_routes.js'));
+// SEND PRIVATE USER DATA
+// Get private user data for settings page
+app.use(require('./API/userPrivateData.js'));
+
+// EDIT USER DATA
+// Submit request to change user data
+app.use(require('./API/editUser.js'));
 
 
 // Listen

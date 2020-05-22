@@ -3,16 +3,13 @@ const jwt = require('jsonwebtoken')
 router = express.Router();
 const UserModel = require('../dbModels/userModel');
 
-const authenticate = async (req,res,next) => {
-
-    console.log("Request to /auth")
+const authenticate = async (req,res,next) => { console.log("Request to /auth")
 
     const authHeader = req.get('Authorization').split(' ')
     const token = authHeader[1]
 
     try { 
         const username = jwt.decode(token) 
-        console.log(username)
         const doc = await UserModel.findOne( {username: username} ).exec();
     
         if( doc === null ) {
@@ -22,7 +19,6 @@ const authenticate = async (req,res,next) => {
         } else {
             next()
         }
-
     } catch (error) {
         console.log(error)
         res.send({authenticated: false, errorMessage: 'database / jwt error'})
