@@ -24,6 +24,7 @@ router.post("/editUser", async (req,res) => { console.log("Request to /editUser"
         email: req.body.email,
         password: req.body.password,
         token: jwt.sign(req.body.username,'abcd'),
+        profilePic64: req.body.profilePic64,
     }
 
     //validate new fields
@@ -34,6 +35,7 @@ router.post("/editUser", async (req,res) => { console.log("Request to /editUser"
     updateDoc.email = insertUser.email
     updateDoc.password = insertUser.password
     updateDoc.token = insertUser.token
+    updateDoc.profilePic64 = insertUser.profilePic64
 
     await updateDoc.save()
     if(updateDoc === null) {

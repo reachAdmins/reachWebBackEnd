@@ -1,7 +1,7 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
 const UserModel = require('../dbModels/userModel')
-const userPostsModel = require('../dbModels/userPostModel')
+const userPostsModel = require('../dbModels/userPostsModel')
 
 router = express.Router()
 
@@ -34,6 +34,7 @@ getPublicUserData = async (username) => {
 
     return userData = {
         username: doc.username,
+        userID: doc._id,
         points: doc.points,
         createdAt: doc.createdAt,
         profilePic64: doc.profilePic64,
@@ -45,7 +46,7 @@ getUserPosts = async (username) => {
 
     const userDoc = await UserModel.findOne({username: username})
     const userPostsDoc = await userPostsModel.findById( userDoc.userPostsID )
-    return posts = userPostsDoc.posts
+    return userPostsDoc.posts
 }
 
 module.exports = router;

@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 
 app.use(express.json()); // Body parsing middleware
+// app.use(express.json({limit: '300mb'})); // Body parsing middleware
 
 // Database
 const mongoose = require('mongoose');
@@ -42,6 +43,10 @@ app.use(require('./API/userPrivateData.js'));
 // EDIT USER DATA
 // Submit request to change user data
 app.use(require('./API/editUser.js'));
+
+// CREATE USER POST
+// Add new post to user_posts collection
+app.use(require('./API/createUserPost.js'));
 
 
 // Listen

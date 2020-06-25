@@ -1,10 +1,15 @@
 const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
-    userID: String,
-    createdAt: String,
-    postText: String,
-    postImage64: String
+    userData: {
+        userID: String,
+        token: String,
+      },
+      postData: {
+        createdAt: String,
+        postText: String,
+        postImage: String
+    }
 })
 
 const userPosts = new mongoose.Schema({

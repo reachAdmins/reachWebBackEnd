@@ -1,7 +1,6 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
 const UserModel = require('../dbModels/userModel')
-const userPostModel = require('../dbModels/userPostModel')
 
 router = express.Router()
 
