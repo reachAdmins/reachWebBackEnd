@@ -4,37 +4,30 @@ const UserModel = require('../dbModels/userModel')
 const userPostsModel = require('../dbModels/userPostsModel')
 router = express.Router()
 
-router.post("/createUserPost", async (req,res) => { console.log('Request to /createUserPost')
+router.post("/deleteUserPost", async (req,res) => { console.log('Request to /deleteUserPost')
 
   const postData = req.body
-  
-  console.log(postData)
 
   const resBody = {
     cont: false,
     errorMessage: ""
   };
 
-  const userDoc = await UserModel.findById(postData.userData.userID)
+  const userDoc = await UserModel.findById(postData.userID)
 
   if( userDoc === null) {
     resBody.errorMessage = "Could not locate userID"
     return res.send(resBody)
   }
 
-  if( userDoc.token !== postData.userData.token) {
+  if( userDoc.token !== postData.token) {
     resBody.errorMessage = "incorrect token for user"
     return res.send(resBody)
   }
 
-  const insertPost = {
-    createdAt: postData.postData.createdAt,
-    postText: postData.postData.postText,
-    postImage64: postData.postData.postImage64
-  }
-
-  const postsDoc = await userPostsModel.findById( userDoc.userPostsID)
-  postsDoc.posts.push(insertPost)
+  const postsDoc = await userPostsModel.findById(userDoc.userPostsID)
+  const delObjIndex = postsDoc.posts.findIndex( postObj => postObj._id = postData.postID)
+  postsDoc.posts.splice(delObjIndex,1)
   postsDoc.save()
 
   resBody.cont = true

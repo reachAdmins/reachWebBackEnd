@@ -45,8 +45,12 @@ app.use(require('./API/userPrivateData.js'));
 app.use(require('./API/editUser.js'));
 
 // CREATE USER POST
-// Add new post to user_posts collection
+// Add new post to user_posts collection to user_doc array
 app.use(require('./API/createUserPost.js'));
+
+// DELETE USER POST
+// Delete post from user_posts collection from user_doc array
+app.use(require('./API/deleteUserPost.js'));
 
 
 // Listen
